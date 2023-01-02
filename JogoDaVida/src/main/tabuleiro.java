@@ -15,19 +15,19 @@ public class tabuleiro {
 	// cria o tabuleiro com as dimensoes passadas por parametros
 	// e inicia as celulas aleatoriamente
 	public tabuleiro(int altura, int largura) {
-		this.altura = altura;
-		this.largura = largura;
-		board = new celula[altura][largura];
+/*1.1*/		this.altura = altura;
+/*1.1*/		this.largura = largura;
+/*1.1*/		board = new celula[altura][largura];
 		
-		for(int i=0; i<board.length; i++)
-			for(int j=0; j< board[i].length; j++) {
-				board[i][j] = new celula();
-				if(Math.random() <= 0.42) {
-					board[i][j].setNovoEstado(true);
-					board[i][j].atualizarEstado();
-				}
-			}				
-	}
+/*1.2*/		for(int i=0; i<board.length; i++)
+/*1.3*/			for(int j=0; j< board[i].length; j++) {
+/*1.4*/				board[i][j] = new celula();
+/*1.5*/				if(Math.random() <= 0.42) {
+/*1.6*/					board[i][j].setNovoEstado(true);
+/*1.6*/					board[i][j].atualizarEstado();
+/*1.7*/				}
+/*1.7*/			}				
+/*1.7*/	}
 	
 	// get tabuleiro
 	public celula[][] getTabuleiro(){
@@ -38,91 +38,68 @@ public class tabuleiro {
 		return largura;		
 	}
 	
-	// funcao que conta o numero de vizinhos vivos de um celula passadas suas coordenadas no tabuleiro
-	public int vizinhosVivos(int linha, int coluna){
-		int cont =0;
+	public int vizinhosVivos (int linha, int coluna) {
 		
-		// diagonal superior esquerda
-		if(linha != 0 && coluna != 0)
-			if(ehVivo(linha -1, coluna-1))
-				cont++;		
-
-		// vizinho acima
-		if(linha != 0)
-			if(ehVivo(linha-1, coluna))
-				cont++;
+/*5.1.3.1*/		int cont = 0;
+/*5.1.3.1*/		for(int i=linha-1; i <= linha+1; i++)
+/*5.1.3.2*/			for(int j=coluna-1; j <= coluna+1; j++)
+/*5.1.3.3*/				if(i >=0 && i <=altura && j >=0 && j <= largura) {
+/*5.1.3.4*/					if(i == linha) {
+/*5.1.3.5*/						if(j != coluna)
+/*5.1.3.6*/							if(ehVivo(i,j))
+/*5.1.3.7*/								cont++;
+/*5.1.3.8*/					}
+/*5.1.3.8*/					else {
+/*5.1.3.9*/						if(i != linha)
+/*5.1.3.10*/							if(ehVivo(i,j))
+/*5.1.3.11*/								cont++;
+/*5.1.3.12*/					}									
+/*5.1.3.12*/				}
 		
-		// vizinho a esquerda
-		if(coluna != 0)
-			if(ehVivo(linha, coluna-1))
-				cont++;
+/*5.1.3.13*/		return cont;
 		
-		// vizinho diagonal superior direito
-		if(linha != 0 && coluna != largura-1)
-			if(ehVivo(linha-1, coluna+1))
-				cont++;
-		
-		// vizinho a direita
-		if(coluna != largura-1)
-			if(ehVivo(linha, coluna+1))
-				cont++;
-		
-		// vizinho diagonal inferior esquerdo
-		if(linha != altura-1 && coluna != 0)
-			if(ehVivo(linha+1, coluna-1))
-				cont++;
-		
-		// vizinho inferior
-		if(linha != altura-1)
-			if(ehVivo(linha+1, coluna))
-				cont++;
-		
-		// vizinho diagonal inferior direito
-		if(linha != altura-1 && coluna != -1)
-			if(ehVivo(linha+1, coluna+1))
-				cont++;		
-		
-		
-		
-		return cont;
 	}
 	
 	
 	// funcao auxiliar que verifica se a celula e viva ou morta
 	public boolean ehVivo(int linha, int coluna) {
-		if(linha < altura && coluna < largura)
-			return board[linha][coluna].getEstado();
-		return false;
+/*5.1.3.2.1*/		if(linha < altura && coluna < largura)
+/*5.1.3.2.2*/			return board[linha][coluna].getEstado();
+/*5.1.3.2.3*/		return false;
 		
 	}
 	
 	// funcao que faz uma nova jogada
 	public void novaGeracao() {
-		gerar();
-		atualizarTabuleiro();
+/*5.1*/		gerar();
+/*5.2*/		atualizarTabuleiro();
 	}
 	
 	
 	// funcao que percorre todo o tabuleiro e define um novo estado para cada celula 
 	public void gerar() {
 		
-		for(int i=0; i<board.length; i++)
-			for(int j=0; j<board[i].length; j++) {
-				int vizinhos = vizinhosVivos(i,j);
-				if(vizinhos < 2) {	board[i][j].setNovoEstado(false);	} //menos de 2 vizinhos vivos
-				else if(vizinhos > 3) { board[i][j].setNovoEstado(false); } // mais de 3 vizinhos vivos
-				else if(vizinhos == 3 ) { board[i][j].setNovoEstado(true); } // 3 vizinhos vivos
-				else if(vizinhos == 2 ) { board[i][j].setNovoEstado(board[i][j].getEstado()); } // 2 vizinhos mantem o estado atual
-			}		
+/*5.1.*/		for(int i=0; i<board.length; i++)
+/*5.1.2*/			for(int j=0; j<board[i].length; j++) {
+/*5.1.3*/				int vizinhos = vizinhosVivos(i,j);
+/*5.1.3*/				if(vizinhos < 2)	
+/*5.1.4*/					board[i][j].setNovoEstado(false);	 //menos de 2 vizinhos vivos
+/*5.1.5*/				else if(vizinhos > 3)
+/*5.1.6*/					board[i][j].setNovoEstado(false); // mais de 3 vizinhos vivos
+/*5.1.7*/				else if(vizinhos == 3 )
+/*5.1.8*/					board[i][j].setNovoEstado(true); // 3 vizinhos vivos
+/*5.1.9*/				else if(vizinhos == 2 )
+/*5.1.10*/					board[i][j].setNovoEstado(board[i][j].getEstado()); // 2 vizinhos mantem o estado atual
+/*5.1.11*/			}		
 	}
 	
 	// funcao que atualiza as novas celulas com o novo estado e faz a geracao do estado atual
 	public void atualizarTabuleiro() {
 		
-		for(int i=0; i<board.length; i++)
-			for(int j=0; j< board[i].length; j++) {
-				board[i][j].atualizarEstado();
-			}
+/*5.2.1*/		for(int i=0; i<board.length; i++)
+/*5.2.2*/			for(int j=0; j< board[i].length; j++) {
+/*5.2.3*/				board[i][j].atualizarEstado();
+/*5.2.4*/			}
 	}
 	
 	
@@ -130,31 +107,31 @@ public class tabuleiro {
 	// funcao que imprime o tabuleiro
 	public void imprimir() {
 		
-		for(int i=0; i<board.length; i++) {
-			for(int j=0; j<board[i].length; j++) {
-				System.out.print(" | ");
-				if(board[i][j].getEstado() == true)
-					System.out.print(" 1 ");
-				else System.out.print(" 0 ");
-			}
-		System.out.println("\n");
-		}
-	}
+/*2.1*/		for(int i=0; i<board.length; i++) {
+/*2.2*/			for(int j=0; j<board[i].length; j++) {
+/*2.3*/				System.out.print(" | ");
+/*2.3*/				if(board[i][j].getEstado() == true)
+/*2.4*/					System.out.print(" 1 ");
+/*2.5*/				else System.out.print(" 0 ");
+/*2.6*/			}
+/*2.7*/		System.out.println("\n");
+/*2.8*/		}
+/*2.8*/	}
 	
 	
 public static void main (String []args){
 		
-		tabuleiro t = new tabuleiro(3,3);
-		System.out.println("Geracao inicial:");
-		t.imprimir();
-		int n = 4;
-		for(int i=0; i <n; i++) {
-			System.out.println("Proxima geracao:");
-			t.novaGeracao();
-			t.imprimir();
-		}
-		
-	}
+/*1*/		tabuleiro t = new tabuleiro(3,3);
+/*2*/		System.out.println("Geracao inicial:");
+/*3*/		t.imprimir();
+		    //int n = 4;
+/*4*/		for(int i=0; i <4; i++) {
+/*5*/			System.out.println("Proxima geracao:");
+/*5*/			t.novaGeracao();
+/*5*/			t.imprimir();
+/*6*/		}
+/*6*/		
+/*7*/	}
 	
 }
 
